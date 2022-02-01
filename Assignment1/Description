@@ -1,0 +1,154 @@
+In this lab you will simulate several scheduling algorithm in order to see how the time required depends on the scheduling algorithms.
+
+
+Definitions
+
+A process is characterized by just four non-negative integers A, B, C, and D.
+
+A: process ID
+
+B: CPU time
+
+C: I/O time
+
+D: Arrival time
+
+A process execution consists of computation alternating with I/O. I refer to these as CPU bursts and I/O bursts. To calculate CPU burst times we make the simplifying assumption that, for each process, the CPU burst times are 0.5 * CPU Time. We will use integers, not floating points. In case (0.5 * CPU Time) is float, round up to the  following cycle (e.g. if cpu time is 7 then 7/2 = 3.5 we round it up to 4. 
+
+Note: If more than one processes arrive at the same time, give preference to the one with lower ID.
+
+You can also assume that B value (i.e., CPU time) will always be greater than 0.
+
+The overall time distribution of the process is defined as:
+
+     0.5 * CPU Time
+	
+
+      I/O time
+	
+
+     0.5 * CPU Time
+Scheduling Algorithms
+
+You must simulate each of the following scheduling algorithms, assuming, for simplicity, that a context switch takes zero time. All times are in cycles. You need only do calculations every time unit (e.g., you may assume nothing happens at time 2.5).
+
+0: FCFS
+
+    Newly arriving processes are added to the end of the queue.
+    When a process is blocked, due to I/O, and then becomes ready, it is added to the end of the queue.
+    If two processes happen to be ready at the same time, give preference to the one with lower ID.
+
+1: RR with quantum 2. 
+
+A process scheduled if one of the following occurs:
+
+    Current running process terminates
+    Current running process is blocked on I/O
+    Current running process ran for 2 cycles
+    You can think of RR as a queue of ready processes. When a process goes from running to ready, it moves to the back of the queue.
+    If two processes become Ready at the same time, give preference to the one with smaller ID
+
+2:  SJF
+
+    Recall SJF  is not preemptive.  SJF stands shortest job first, not shortest burst first. So the time you use to determine priority is the  total time remaining (i.e., the input value B minus the number of cycles this process has run)
+
+    If several processes have the same remaining CPU time, give preference to the process with a lower ID.
+
+Running your program
+
+Your program (scheduling.c) must read a file describing n processes (i.e., n quadruples of numbers) as a command line argument, and the scheduling algorithm integer.
+
+./scheduler <input.txt> <schedule algorithm integer>
+
+Your program will simulate the n processes until they all terminate.must read its input from a file using the specified scheduling algorithm.
+
+The way to do this is to keep track of the state of each process (e.g., ready, running, blocked) and advance time, making any statetransitions needed.
+
+Note: Do not assume you can change the input by adding or removing whitespace or commas, etc. You program can assume correct per the specification input, not a specific input format, e.g., the example input below can appear in a single line.
+Output 
+
+    Your program will produce an output file with name: inputfilename-s.txt.
+    The inputfilename is the name of the input file without the extension.
+    s is the scheduling algorithm:0, 1, or 2
+    For example, if the input file is inp1.txt, your output file for FCFS shall be: inp1-0.txt
+    The output file will have two parts: 
+        Timing snapshot (starting from cycle 0), and 
+        Statistics.
+    Your output must match the format used in the provided samples.
+
+Timing snapshot
+
+At every line show:
+
+    Cycle time
+    State of each process (running, ready, or blocked)
+    for example: 1:blocked (i.e. process 1 is in blocked state)
+    Print processes ordered by their process ID
+
+Be careful: do not show processes that have not yet arrived, or those that have terminated.
+Summary statistics
+
+After all processes have terminated display:
+
+    Finishing time (i.e. last cycle)
+    CPU utilization ( # cycles CPU was doing work / total number of cycles)
+        When there is a cycle where none of the processes is running, then the CPU is considered idle. 
+    For each process: Turnaround time (i.e. cycle this process finished – cycle it arrived in the system + 1), 
+        e.g. in the below I/O example:
+             PO starts (arrives) at cycle 0 and terminates in cycle 3.
+             P1  starts (arrives)  at cycle 5 and terminates in cycle 7
+             P2 starts (arrives) at cycle 3 and terminates in cycle 6
+
+Example I/O
+
+An I/O example of scheduling 3 processes using FCFS algorithm:
+
+3
+0 2 2 0
+1 2 1 5
+2 2 1 3
+
+If your program is asked to simulate the FCFC algorithm:
+
+./scheduler 3processes.txt 0
+
+Your program should generate the 3processes-0.txt file with the following:
+
+0 0:running
+1 0:blocked
+2 0:blocked
+3 0:running 2:ready
+4 2:running
+5 1:running 2:blocked
+6 1:blocked 2:running
+7 1:running
+(empty line)
+Finishing time: 7
+CPU utilization: 0.75
+Turnaround process 0: 4
+Turnaround process 1: 3
+Turnaround process 2: 4
+
+The first integer 0 in each line in the first part of the output is the clock cycle followed by a space and state of each process depicted by process id:<state>
+
+See additional IO-example files in the attachment.
+What to submit
+
+You need to submit the following a zip file (named: firstname_lastname_yorkid.zip) that includes the following required  components :
+
+    Individual C implementation of the scheduler, named scheduler.c (can aslo include other dependency files, see the start kit code for an example)
+    Each file should include the following header:
+    /**
+     * Full Name:
+     * Course ID: 
+     * Description: a very brief description of what is implemented (no more than 4 lines)
+     */
+    You must include enough high-level comments in your program so that a reader (e.g., the grader/YA) who is expert in C and knowledgeable about scheduling algorithms can understand the basic operation of your program.
+    Your code should be properly formatted (use can use online services (e.g., codebeautify) this one to achieve this)
+    A  README.txt file describing each included file and dependencies. 
+    A Makefile which will be used to compile and run your program (see the start kit code example)
+    You code should terminate within a reasonable amount of time. If you are not sure, please ask.
+
+    Note: TAs are instructed to deduct points for programs that don't follow the above guidelines and require special adjustment to test (e.g., due to non-trivial compilation and execution, non-conforming to IO formats, etc).
+
+I've included a start kit code that implements basic functionality. Feel free to adopt it in your project. (This is optional).
